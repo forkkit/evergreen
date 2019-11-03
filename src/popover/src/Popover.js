@@ -1,3 +1,5 @@
+import cx from 'classnames'
+import { css as gcss } from 'glamor'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Positioner } from '../../positioner'
@@ -87,7 +89,7 @@ export default class Popover extends Component {
      * Function that will be called when the exit transition is complete.
      */
     onCloseComplete: PropTypes.func.isRequired,
-    
+
     /**
      * Function that will be called when the body is clicked.
      */
@@ -112,7 +114,7 @@ export default class Popover extends Component {
     onOpen: () => {},
     onClose: () => {},
     onOpenComplete: () => {},
-    onCloseComplete: () => {},    
+    onCloseComplete: () => {},
     onBodyClick: () => {},
     bringFocusInside: false,
     shouldCloseOnExternalClick: true,
@@ -202,7 +204,7 @@ export default class Popover extends Component {
     if (this.popoverNode && this.popoverNode.contains(e.target)) {
       return
     }
-    
+
     // Notify body click
     this.props.onBodyClick(e)
 
@@ -345,7 +347,7 @@ export default class Popover extends Component {
       minWidth,
       position,
       minHeight,
-      statelessProps,
+      statelessProps = {},
       animationDuration,
       onCloseComplete
     } = this.props
@@ -372,12 +374,19 @@ export default class Popover extends Component {
               getRef(ref)
             }}
             data-state={state}
-            css={css}
-            style={style}
             display={display}
             minWidth={minWidth}
             minHeight={minHeight}
             {...statelessProps}
+            className={cx(statelessProps.className, css ? gcss(css).toString() : undefined)}
+            style={
+              statelessProps && statelessProps.style
+                ? {
+                  ...style,
+                  ...statelessProps.style
+                }
+                : style
+            }
             onMouseLeave={this.handleCloseHover}
           >
             {typeof content === 'function'

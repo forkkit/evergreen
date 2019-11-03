@@ -1,6 +1,7 @@
+import cx from 'classnames'
+import { css } from 'glamor'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { css } from 'ui-box'
 import { Pane } from '../../layers'
 import { Paragraph, Heading } from '../../typography'
 import { Overlay } from '../../overlay'
@@ -36,7 +37,7 @@ const closeAnimation = css.keyframes('closeAnimation', {
   }
 })
 
-const animationStyles = {
+const animationStylesClass = css({
   '&[data-state="entering"], &[data-state="entered"]': {
     animation: `${openAnimation} ${ANIMATION_DURATION}ms ${
       animationEasing.deceleration
@@ -47,7 +48,7 @@ const animationStyles = {
       animationEasing.acceleration
     } both`
   }
-}
+}).toString()
 
 class Dialog extends React.Component {
   static propTypes = {
@@ -187,7 +188,12 @@ class Dialog extends React.Component {
     /**
      * Whether or not to prevent scrolling in the outer body
      */
-    preventBodyScrolling: PropTypes.bool
+    preventBodyScrolling: PropTypes.bool,
+
+    /**
+     * Props that are passed to the Overlay component.
+     */
+    overlayProps: PropTypes.object
   }
 
   static defaultProps = {
@@ -209,7 +215,8 @@ class Dialog extends React.Component {
     shouldCloseOnEscapePress: true,
     onCancel: close => close(),
     onConfirm: close => close(),
-    preventBodyScrolling: false
+    preventBodyScrolling: false,
+    overlayProps: {}
   }
 
   renderChildren = close => {
@@ -248,10 +255,11 @@ class Dialog extends React.Component {
       cancelLabel,
       shouldCloseOnOverlayClick,
       shouldCloseOnEscapePress,
-      containerProps,
+      containerProps = {},
       contentContainerProps,
       minHeightContent,
-      preventBodyScrolling
+      preventBodyScrolling,
+      overlayProps
     } = this.props
 
     const sideOffsetWithUnit = Number.isInteger(sideOffset)
@@ -274,7 +282,8 @@ class Dialog extends React.Component {
         containerProps={{
           display: 'flex',
           alignItems: 'flex-start',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          ...overlayProps
         }}
         preventBodyScrolling={preventBodyScrolling}
       >
@@ -291,9 +300,9 @@ class Dialog extends React.Component {
             marginY={topOffsetWithUnit}
             display="flex"
             flexDirection="column"
-            css={animationStyles}
             data-state={state}
             {...containerProps}
+            className={cx(containerProps.className, animationStylesClass)}
           >
             {hasHeader && (
               <Pane

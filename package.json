@@ -1,6 +1,6 @@
 {
   "name": "evergreen-ui",
-  "version": "4.18.2",
+  "version": "4.21.2",
   "description": "🌲 React UI Kit by Segment 🌲",
   "contributors": [
     "Jeroen Ransijn (https://jssr.design/)",
@@ -17,9 +17,11 @@
   "license": "MIT",
   "main": "commonjs/index.js",
   "module": "esm/index.js",
+  "types": "index.d.ts",
   "files": [
     "commonjs",
-    "esm"
+    "esm",
+    "index.d.ts"
   ],
   "sideEffects": false,
   "scripts": {
@@ -44,10 +46,11 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "@blueprintjs/icons": "^3.2.0",
+    "@types/react": "^16.9.5",
     "arrify": "^1.0.1",
     "classnames": "^2.2.6",
     "dom-helpers": "^3.2.1",
-    "downshift": "^1.31.16",
+    "downshift": "^3.3.1",
     "fuzzaldrin-plus": "^0.6.0",
     "glamor": "^2.20.40",
     "lodash.debounce": "^4.0.8",
@@ -57,11 +60,11 @@
     "react-tiny-virtual-list": "^2.1.4",
     "react-transition-group": "^2.5.0",
     "tinycolor2": "^1.4.1",
-    "ui-box": "^1.4.0"
+    "ui-box": "^2.1.2"
   },
   "peerDependencies": {
-    "react": "^16.3.0",
-    "react-dom": "^16.3.0"
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.2",
@@ -179,7 +182,7 @@
   "size-limit": [
     {
       "path": "commonjs/index.js",
-      "limit": "204 KB"
+      "limit": "212 KB"
     }
   ],
   "husky": {

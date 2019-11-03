@@ -1,3 +1,5 @@
+import cx from 'classnames'
+import { css as gcss } from 'glamor'
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import debounce from 'lodash.debounce'
@@ -39,6 +41,11 @@ export default class Tooltip extends PureComponent {
     hideDelay: PropTypes.number.isRequired,
 
     /**
+     * Time in ms before showing the Tooltip.
+     */
+    showDelay: PropTypes.number.isRequired,
+
+    /**
      * When True, manually show the Tooltip.
      */
     isShown: PropTypes.bool,
@@ -57,7 +64,8 @@ export default class Tooltip extends PureComponent {
   static defaultProps = {
     appearance: 'default',
     position: Position.BOTTOM,
-    hideDelay: 120
+    hideDelay: 120,
+    showDelay: 0
   }
 
   constructor(props, context) {
@@ -65,6 +73,7 @@ export default class Tooltip extends PureComponent {
 
     this.state = {
       id: `evergreen-tooltip-${++idCounter}`,
+      willShow: false,
       isShown: props.isShown,
       isShownByTarget: false
     }
@@ -80,14 +89,20 @@ export default class Tooltip extends PureComponent {
   show = () => {
     if (this.state.isShown) return
     this.setState({
-      isShown: true
+      willShow: true
     })
+    setTimeout(() => {
+      if (!this.state.willShow) return
+      this.setState({
+        isShown: true
+      })
+    }, this.props.showDelay)
   }
 
   hide = () => {
-    if (!this.state.isShown) return
     this.setState({
-      isShown: false
+      isShown: false,
+      willShow: false
     })
   }
 
@@ -154,7 +169,8 @@ export default class Tooltip extends PureComponent {
 
   handleMouseLeaveTarget = () => {
     this.setState({
-      isShownByTarget: false
+      isShownByTarget: false,
+      willShow: false
     })
   }
 
@@ -164,7 +180,7 @@ export default class Tooltip extends PureComponent {
       isShown,
       content,
       position,
-      statelessProps
+      statelessProps = {}
     } = this.props
     const { isShown: stateIsShown, isShownByTarget } = this.state
 
@@ -191,11 +207,14 @@ export default class Tooltip extends PureComponent {
             appearance={appearance}
             innerRef={ref => getRef(ref)}
             data-state={state}
-            css={css}
             style={style}
             onMouseEnter={this.handleMouseEnterTarget}
             onMouseLeave={this.handleMouseLeaveTarget}
             {...statelessProps}
+            className={cx(
+              statelessProps.className,
+              css ? gcss(css).toString() : undefined
+            )}
           >
             {content}
           </TooltipStateless>
